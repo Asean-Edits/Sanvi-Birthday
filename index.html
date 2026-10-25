@@ -529,6 +529,20 @@
 
 <body>
 
+    <!-- Midnight Countdown Gate Overlay -->
+    <div id="countdownGate"
+        style="position: fixed; inset: 0; background: #07040d; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
+        <span style="font-size: 3rem; margin-bottom: 12px;">⏳</span>
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #ffd879; margin-bottom: 8px;">A
+            Special Surprise Awaits...</h1>
+        <p style="font-size: 0.9rem; color: #c8b6ff; margin-bottom: 24px;">Unlocks automatically on October 26, 2026 at
+            12:00 AM!</p>
+        <div id="timerDisplay"
+            style="font-size: 1.4rem; font-weight: bold; color: #ffffff; background: rgba(255,255,255,0.06); padding: 16px 24px; border-radius: 16px; border: 1px solid rgba(255,216,121,0.3); font-family: monospace;">
+            Loading countdown...
+        </div>
+    </div>
+
     <!-- Main Stage Container -->
     <div class="stage-wrapper">
         <div class="phone-mockup" id="phoneContainer">
@@ -1021,6 +1035,39 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+
+        // Countdown Gate Logic
+        function checkUnlockTime() {
+            // Target date: October 26, 2026, 00:00:00
+            const targetDate = new Date('2026-10-26T00:00:00');
+            const now = new Date();
+            const difference = targetDate - now;
+
+            const gate = document.getElementById('countdownGate');
+
+            if (difference <= 0) {
+                // Time has arrived! Hide the gate so she can view the site
+                if (gate) gate.style.display = 'none';
+                return;
+            }
+
+            // Calculate hours, minutes, seconds remaining
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            // Format numbers with leading zeros
+            const hStr = String(hours).padStart(2, '0');
+            const mStr = String(minutes).padStart(2, '0');
+            const sStr = String(seconds).padStart(2, '0');
+
+            document.getElementById('timerDisplay').textContent = `${hStr}h : ${mStr}m : ${sStr}s remaining`;
+        }
+
+        // Run immediately and update every second
+        setInterval(checkUnlockTime, 1000);
+        checkUnlockTime();
+
         /* ================= 1. AUDIO & SOUND EFFECTS ================= */
         let sfxEnabled = true;
         let audioCtx = null;
